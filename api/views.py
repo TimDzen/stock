@@ -20,6 +20,12 @@ class StockModelViewSet(viewsets.ModelViewSet):
 
 
 class ProductModelViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet для управления экземплярами Product.
+    Предоставляет метод 'GET' для получения экземпляров Product, отфильтрованных по текущему пользователю.
+    Права доступа:
+        - IsProviderOrReadOnly: Только поставщики могут изменять, другие могут только просматривать.
+    """
     permission_classes = (IsProviderOrReadOnly,)
     queryset = Product.objects.none()
     serializer_class = ProductSerializer
@@ -29,11 +35,22 @@ class ProductModelViewSet(viewsets.ModelViewSet):
 
 
 class BusinessModelViewSet(viewsets.ModelViewSet):
+     """
+    ViewSet для управления экземплярами Business.
+    Предоставляет операции CRUD для экземпляров Business, отфильтрованных по текущему пользователю.
+    Права доступа:
+        - IsCustumerOrReadOnly: Только клиенты могут создавать или обновлять, другие могут только просматривать.
+    """
     permission_classes = (IsCustumerOrReadOnly,)
     queryset = Business.objects.none()
     serializer_class = BusinessSerializer
 
     def create(self, request, *args, **kwargs):
+         """
+        Обрабатывает создание экземпляра Business.
+        Проверяет, что запрашиваемое количество продукта доступно на складе
+        перед созданием экземпляра Business и обновлением количества продукта.
+         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         product_id = serializer.validated_data.get('product')
