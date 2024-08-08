@@ -34,3 +34,19 @@ DzenTim.pythonanywhere.com
    python manage.py runserver
 ```
 6. Открыть браузер и перейти по адресу http://127.0.0.1:8000/
+
+7. ### Как зарегистрировать пользователя
+
+```
+http://localhost:8000/users/
+```
+
+Так вы получите доступ к функционалу поставщика: 
+```
+http://localhost:8000/products/
+```
+или потребителя:
+```
+http://localhost:8000/business/
+```
+
