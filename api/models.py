@@ -10,11 +10,17 @@ class ApiUser(AbstractUser):
     user_type = models.IntegerField()
 
     def __str__(self):
-        return f"ID: {self.id}, " \
-            f"Имя пользователя: {self.username}, " \
-            f"Тип пользователя: " \
-            f"{self.user_type_choices[self.user_type][1]}, " \
-            f"email: {self.email} "
+        try:
+            user_type_display = dict(self.user_type_choices).get(self.user_type, "Неизвестный тип пользователя")
+            return f"ID: {self.id}, " \
+                   f"Имя пользователя: {self.username}, " \
+                   f"Тип пользователя: {user_type_display}, " \
+                   f"email: {self.email} "
+        except IndexError:
+            return f"ID: {self.id}, " \
+                   f"Имя пользователя: {self.username}, " \
+                   f"Тип пользователя: Ошибка в типе пользователя (user_type={self.user_type}), " \
+                   f"email: {self.email} "
 
 
 class Stock(models.Model):
@@ -51,3 +57,8 @@ class Business(models.Model):
                                 related_name="business_actions",
                                 on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    
+    def __str__(self):
+        return f"Пользователь: {self.user.username}, " \
+               f"Товар: {self.product.name}, " \
+               f"Количество: {self.quantity}"
